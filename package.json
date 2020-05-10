@@ -1,0 +1,30 @@
+{
+  "name": "549-personal-blog",
+  "version": "0.0.1",
+  "description": "Decentralised and censor-proof blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "keywords": [
+    "blockchain",
+    "censor-proof",
+    "anonymous",
+    "blog",
+    "ethereum",
+    "ethereum-classic"
+  ],
+  "author": "eddieoz",
+  "license": "MIT",
+  "devDependencies": {
+    "@openzeppelin/cli": "^2.8.2",
+    "@openzeppelin/contracts": "^3.0.1",
+    "@openzeppelin/upgrades": "^2.8.0",
+    "@truffle/hdwallet-provider": "^1.0.35",
+    "ganache-cli": "^6.9.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contract-loader": "^0.6.1",
+    "web3": "^1.2.7"
+  }
+}

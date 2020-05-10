@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<head>
+        <meta charset="utf-8" />
+    <title>549 IPFS File Uploader</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+	<link href='css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+
+	<style>
+		input[type="file"] {
+    		display: none;
+		}
+	</style>
+	<script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/ipfs-http-client.js"></script>
+	<script src="js/buffer@5.2.1.js"></script>
+</head>
+<body>
+    <div class="container">
+
+        <h1>549 IPFS Document Uploader</h1>
+
+    	<div class="panel panel-default">
+        	<div class="panel-heading">New Document File (.md)</div>
+        	<div class="panel-body">    
+                <div class="form-group">
+					<label for="postIndex">Blog Post Index</label>
+					<input type="text" class="form-control" id="postIndex" aria-describedby="postIndexHelp" placeholder="Enter post index">
+					<small id="postIndexHelp" class="form-text text-muted">0 for auto or insert index to update a post</small>
+				</div>
+				<div class="form-group">
+					<label for="postTitle">Post Title</label>
+					<input type="text" class="form-control" id="postTitle" aria-describedby="postTitleHelp" placeholder="Enter post title">
+					<small id="postTitleHelp" class="form-text text-muted">Insert the blog post title</small>
+				</div>  
+				<div class="form-group">
+					<input type="checkbox" class="form-check-input" id="postIsVisible" aria-describedby="postIsVisibleHelp" placeholder="Is this post visible?" checked>
+					<label class="form-check-label" for="postIsVisible">Enabled?</label>
+					<small id="postIsVisibleHelp" class="form-text text-muted">Define the visibility of this post</small>
+				</div>  
+            	<div class="form-group">
+                	<label for="file-upload" class="btn btn-primary">
+    					<i class="fa fa-cloud-upload"></i>Select Document
+					</label>
+                	<input id="file-upload" type="file"/>
+                	<img id="loader" src="img/spinner.gif">
+            	</div>
+        	</div>
+    	</div>
+
+        <div class="panel panel-default">
+        	<div class="panel-heading">Details</div>
+        	<div class="panel-body"> 
+        		<div id="ipfshash"></div>
+				<div id="tx"></div>
+				<div id="imgdiv"></div>
+				<div id="postId"></div>
+        	</div>
+		</div>  
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">Records</div>
+        	<div class="panel-body"> 
+				<div class="list-group">
+					<div id="arrayContent"></div>
+				</div>
+				
+        	</div>
+		</div>
+    
+    </div>
+    
+    <script src="js/549.js"></script>
+    
+</body>
+</html>
