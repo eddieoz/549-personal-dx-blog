@@ -6,3 +6,6 @@ bin
 tmp
 package-lock.json
 .openzeppelin
+src/eddieoz.crypto/js/dxblog.js
+src/md-reader/lib/dxblog.js
+src/ipfs-uploader/js/549.js
