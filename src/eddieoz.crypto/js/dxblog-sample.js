@@ -1,5 +1,6 @@
 $(document).ready(function () {
 });
+
 var contractAddress = '<insert your smart-contract address>';
 var ABI = [
 	{
