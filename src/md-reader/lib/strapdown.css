@@ -5,12 +5,48 @@ This chunk is to fix Bootstrap so that the Markdown output looks good
 
 *******************************************************************/
 
-body {
-  /*padding-top: 60px;*/
-  padding-bottom: 40px;
-  font-size: 15px;
-  line-height: 150%;
+@media (min-width: 768px){
+  .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+      width: 600px;
+  }
 }
+
+@media (min-width: 0px) and (max-width: 768px){
+  .container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+      width: auto;
+  }
+}
+
+body {
+  font-size: 18px;
+  line-height: 170%;
+}
+
+li {
+  line-height: 30px;
+}
+
+p {
+  margin: 15px 0 15px;
+}
+
+blockquote p {
+  margin-bottom: 0;
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 30px;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 40px;
+}
+
+h4 {
+  font-size: 22px;
+  line-height: 20px;
+}
+
 
 xmp, textarea {
   display: none;

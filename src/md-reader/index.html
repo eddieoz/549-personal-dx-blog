@@ -1,64 +1,84 @@
-
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>eddieoz.crypto decentralised blog</title>
+  <title>eddieoz.crypto dx blog | 549-project</title>
 
-<script src="lib/jquery.min.js"></script>
-<script src="lib/marked.min.js"></script>
-<script src="lib/prettify.min.js"></script>
-<script src="lib/strapdown.js"></script>
-<script src="lib/params.js"></script>
-<link rel="stylesheet" href="lib/strapdown.css" />
-<link rel="stylesheet" href="lib/mdown-style.css" />
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/marked.min.js"></script>
+  <script src="lib/prettify.min.js"></script>
+  <script src="lib/strapdown.js"></script>
+  <script src="lib/params.js"></script>
+  <script src="lib/web3.min.js"></script>
 
-<style type="text/css">
-body .navbar-inner #headline {
-  font-size: 16px;
-}
-</style>
+  <link rel="stylesheet" href="lib/themes/bootstrap.min.css" />
+  <link rel="stylesheet" href="lib/strapdown.css" />
+  <link rel="stylesheet" href="lib/mdown-style.css" />
+
+
+  <style type="text/css">
+    body .navbar-inner #headline {
+      font-size: 20px;
+    }
+  </style>
 
 </head>
+
 <body>
+  <xmp id="markdown" theme="" style="display:none;"></xmp>
 
-<xmp id="markdown" theme="" style="display:none;"></xmp>
-<h1 id="loading">Loading...</h1>
 
-<script>
-function render(path) {
-  var xmp = document.getElementById("markdown");
+  <div class="container">
+    <h1 id="loading" class="body">Loading...</h1>
 
-  // set theme first.
-  var theme = getParameterByName("theme")
-  if (theme && theme && theme.length > 0) {
-    $(xmp).attr('theme', theme)
-  }
+    <h1>Decentralised Blog Articles</h1>
+    <p>
+      Last updates, writings and readings
+    </p>
 
-  $.get(path, function(data) {
-    xmp.innerHTML = data;
-    strapdown(window, document)
+    <div class="list-group">
+      <ul>
+        <div id="arrayContent"></div>
+      </ul>
+    </div>
+  </div>
 
-    // fix the navbar
-    $('.navbar #headline').html('<a href="https://ipfs.io/ipfs/QmPzJznesTTVrG3QTPU8mTLyHZsbZriEU23nr7ijfJjHi7">eddieoz.crypto</a>')
-    $('title').text($('.navbar-inner #headline').text())
+  <script>
+    function render(path) {
+      var xmp = document.getElementById("markdown");
 
-    $('.navbar-fixed-top')
-      .addClass('navbar-static-top')
-      .removeClass('navbar-fixed-top')
+      // set theme first.
+      var theme = getParameterByName("theme")
+      if (theme && theme && theme.length > 0) {
+        $(xmp).attr('theme', theme)
+      }
 
-    $('#loading').hide()
-  })
-}
+      $.get(path, function (data) {
+        xmp.innerHTML = data;
+        strapdown(window, document)
 
-var hash = window.location.hash.substring(1)
-if (hash.length > 0) {
-  render(hash)
-} else {
-  window.location.assign("https://ipfs.io/ipfs/QmPzJznesTTVrG3QTPU8mTLyHZsbZriEU23nr7ijfJjHi7");
-  // window.location.hash = "#/ipfs/QmTDMoVqvyBkNMRhzvukTDznntByUNDwyNdSfV8dZ3VKRC/readme.md"
-  //window.location.reload()
-}
-</script>
+        // fix the navbar
+        $('.navbar #headline').html('<a href="https://eddieoz.crypto">eddieoz.crypto dx blog | 549-project</a>')
+        $('title').text($('.navbar-inner #headline').text())
+
+        $('.navbar-fixed-top')
+          .addClass('navbar-static-top')
+          .removeClass('navbar-fixed-top')
+
+        $('#loading').hide()
+      })
+    }
+
+    var hash = window.location.hash.substring(1)
+    if (hash.length > 0) {
+      render(hash)
+    } else {
+      window.location.assign("https://eddieoz.crypto");
+      // window.location.hash = "#/ipfs/QmTDMoVqvyBkNMRhzvukTDznntByUNDwyNdSfV8dZ3VKRC/readme.md"
+      //window.location.reload()
+    }
+  </script>
+  <script src="lib/dxblog.js"></script>
 </body>
+
 </html>
