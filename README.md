@@ -19,7 +19,7 @@ IPFS Companion
 $ npm install
 (optional) $ npm audit fix 
 $ npx openzeppelin init
-$ cp secrets.json-config secrets.json
+$ cp secrets.json-sample secrets.json
 ```
 
 ### Smart-contract compile and deploy
@@ -43,14 +43,12 @@ Take a note of the smart-contract address (i.e: 0xe78A0F7E598Cc8b0Bb87894B0F60dD
 
 Update the smart-contract address on 3 places: 
 
-on `src/blog/js/dxblog.js`
-update `var contractAddress = '<your smart-contract address>'`
-
-on `src/ipfs-uploader/549.js`
-update `var ganacheContractAddress = '<your smart-contract address>'` 
-
-on `src/md-reader/lib/dxblog.js`
-update `var contractAddress = '<your smart-contract address>'`
+* on `src/blog/js/dxblog.js`
+    * update `var contractAddress = '<your smart-contract address>'`
+* on `src/ipfs-uploader/549.js`
+    * update `var ganacheContractAddress = '<your smart-contract address>'` 
+* on `src/md-reader/lib/dxblog.js`
+    * update `var contractAddress = '<your smart-contract address>'`
 
 ### IPFS Setup
 
@@ -80,6 +78,7 @@ Right-click over the uploaded folder, select `Share > Copy` then open a new tab 
 Open IPFS dashboard:
 On browser extension, open `Web-UI > Files`
 Click on `+Add > Folder` and upload the entire folder `md-reader` 
+
 a) Right-click over the uploaded folder, select `Share > Copy` then open a new tab with the address:
 * it should open **eddieoz.crypto** page.
 	* after publishing your own blog homepage, you can change the default address on index.html
@@ -96,10 +95,30 @@ b)Right-click over the uploaded folder, select `Share > Copy Hash` then open a n
 Open IPFS dashboard:
 On browser extension, open `Web-UI > Files`
 Click on `+Add > Folder` and upload the entire folder `blog` 
-a) Right-click over the uploaded folder, select `Share > Copy` then open a new tab with the address:
-- it should open **your homepage** page.
-	- after publishing your own blog homepage, you can change the default address on `md-reader` index.html
 
+a) Right-click over the uploaded folder, select `Share > Copy` then open a new tab with the address:
+* it should open **your homepage** page.
+	* after publishing your own blog homepage, you can change the default address on `md-reader` index.html
 
 ---
-LICENSE: MIT
+MIT License
+
+Copyright (c) 2020 Edilson Osorio Jr
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
