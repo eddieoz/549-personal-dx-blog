@@ -104,6 +104,16 @@ a) Right-click over the uploaded folder, select `Share > Copy` then open a new t
 	* after publishing your own blog homepage, you can change the default address on `md-reader` index.html
 
 ---
+
+Reference:
+* https://web3js.readthedocs.io/en/v1.2.7
+* https://docs.ipfs.io/guides/guides/addressing/
+* https://docs.openzeppelin.com/
+* https://ethereum.stackexchange.com/questions/68947/uploading-files-on-ipfs-infura
+* https://ipfs.io/docs/examples/markdown-viewer/
+* https://jacksonng.org/ipfs-smart-contract
+
+---
 MIT License
 
 Copyright (c) 2020 Edilson Osorio Jr
