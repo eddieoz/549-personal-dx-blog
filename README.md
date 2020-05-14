@@ -1,5 +1,5 @@
 
-# 549-Project Dex Personal Blog
+# 549-Project - Personal Dex Blog
 ## A decentralised, unstoppable, privacy-by-design and censor-proof blog
 
 ### Pre-requisites
