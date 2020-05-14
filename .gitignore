@@ -1,6 +1,7 @@
 node_modules
 .openzeppelin/.session
 secrets.json
+networks
 build
 bin
 tmp
