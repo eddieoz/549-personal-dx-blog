@@ -113,6 +113,7 @@ https://eddieoz.crypto (needs 'unstoppable extension' or Opera mobile)
 * https://web3js.readthedocs.io/en/v1.2.7
 * https://docs.ipfs.io/guides/guides/addressing/
 * https://docs.openzeppelin.com/
+* https://github.com/unstoppabledomains/
 * https://ethereum.stackexchange.com/questions/68947/uploading-files-on-ipfs-infura
 * https://ipfs.io/docs/examples/markdown-viewer/
 * https://jacksonng.org/ipfs-smart-contract
