@@ -1,4 +1,7 @@
 
+# 549-Project Dex Personal Blog
+## A privacy-by-design, decentralised, unstoppable and censor-proof blog
+
 ### Pre-requisites
 
 ```
