@@ -103,9 +103,13 @@ a) Right-click over the uploaded folder, select `Share > Copy` then open a new t
 * it should open **your homepage** page.
 	* after publishing your own blog homepage, you can change the default address on `md-reader` index.html
 
----
 
-Reference:
+### Live Demo
+
+https://eddieoz.crypto (needs 'unstoppable extension' or Opera mobile)
+
+### Reference:
+
 * https://web3js.readthedocs.io/en/v1.2.7
 * https://docs.ipfs.io/guides/guides/addressing/
 * https://docs.openzeppelin.com/
@@ -114,6 +118,7 @@ Reference:
 * https://jacksonng.org/ipfs-smart-contract
 
 ---
+
 MIT License
 
 Copyright (c) 2020 Edilson Osorio Jr
