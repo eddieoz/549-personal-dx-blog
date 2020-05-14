@@ -1,11 +1,16 @@
-# 549-personal-blog
-Decentralised, unstoppable and censor-proof blog.
 
 ### Pre-requisites
 
 ```
 node v10.20.1 
 npm v6.14.4
+```
+
+Browser extensions
+```
+Metamask (or Brave Browser)
+Unstoppable Domains
+IPFS Companion
 ```
 
 ###  Environment setup
@@ -50,7 +55,7 @@ update `var contractAddress = '<your smart-contract address>'`
 ### IPFS Setup
 
 Install ipfs browser extension: IPFS Companion 
-- https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch
+* https://chrome.google.com/webstore/detail/ipfs-companion/nibjojkomfdiaoajekhjakgkdhaomnch
 
 
 ### Configure project files to IPFS
@@ -67,13 +72,34 @@ Open IPFS dashboard:
 On browser extension, open `Web-UI > Files`
 Click on `+Add > Folder` and upload the entire folder `ipfs-uploader` 
 Right-click over the uploaded folder, select `Share > Copy` then open a new tab with the address:
-- it should open **549 IPFS File Uploader** page.
+* it should open **549 IPFS File Uploader** page.
 
----
 
-[to-do] Readme Blog Template and Home
+#### Template/Markdown Reader
+
+Open IPFS dashboard:
+On browser extension, open `Web-UI > Files`
+Click on `+Add > Folder` and upload the entire folder `md-reader` 
+a) Right-click over the uploaded folder, select `Share > Copy` then open a new tab with the address:
+* it should open **eddieoz.crypto** page.
+	* after publishing your own blog homepage, you can change the default address on index.html
+
+b)Right-click over the uploaded folder, select `Share > Copy Hash` then open a new tab with the address
+* on `src/md-reader/lib/dxblog.js`
+	* update `https://gateway.ipfs.io/ipfs/<ipfs hash>#/ipfs/` with your own hash
+* on `src/blog/js/dxblog.js`
+	* update `https://gateway.ipfs.io/ipfs/<ipfs hash>#/ipfs/` with your own hash
+(yes, sometimes it is recursive)
+
+#### Homepage
+
+Open IPFS dashboard:
+On browser extension, open `Web-UI > Files`
+Click on `+Add > Folder` and upload the entire folder `blog` 
+a) Right-click over the uploaded folder, select `Share > Copy` then open a new tab with the address:
+- it should open **your homepage** page.
+	- after publishing your own blog homepage, you can change the default address on `md-reader` index.html
+
 
 ---
 LICENSE: MIT
-
-

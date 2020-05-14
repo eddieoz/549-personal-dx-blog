@@ -1,5 +1,5 @@
-$(document).ready( function () {
-} );
+$(document).ready(function () {
+});
 var contractAddress = '<insert smart-contract address>';
 var ABI = [
 	{
@@ -203,39 +203,44 @@ var ABI = [
 ];
 var DocRegisterHash;
 
-async function initializeEth(){ 
+async function initializeEth() {
+
 	// web3 = new Web3(new Web3.providers.HttpProvider("https://goerli.infura.io/v3/<your api key>")); // using infura
 	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545")); // using infura
-    web3.eth.defaultAccount = web3.eth.accounts[0];  
-    DocRegisterHash = new web3.eth.Contract( ABI, contractAddress );
+	web3.eth.defaultAccount = web3.eth.accounts[0];
+	DocRegisterHash = new web3.eth.Contract(ABI, contractAddress);
+
 }
 
-async function listAllPosts(){
-    
+async function listAllPosts() {
 
-    await DocRegisterHash.methods.totalPosts().call()
-    .then(total => {
-        var html = '';
-        for (var i=total; i>=1; i--){
-            var newHtml = new Promise ((resolve, reject) => {
-                DocRegisterHash.methods.getPost(i).call()
-                .then( result => {
-                    //console.log(result);
-                    if (result['_isVisible'] == true){
-                      resolve({'index':result['_index'], 'ipfsHash':result['_ipfsHash'], 'title':result['_title'], 'creationTime':result['creationTime'], 'lastUpdateTime':result['lastUpdateTime']});
-                    }
-                })
-            })
-            newHtml.then((result) => {
-                // md reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
-                var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
-                html += '<li><a target=_blank href="https://gateway.ipfs.io/ipfs/QmV3ew3hAqaQM8bWvS8dedWLWo4sF71sEVo3aoteLYyd1z#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
-                $("#arrayContent").html(html);
-            });
-            
-        };
+	await DocRegisterHash.methods.totalPosts().call()
+		.then(total => {
+			var html = '';
+			for (var i = total; i >= 1; i--) {
 
-    })
+				var newHtml = new Promise((resolve, reject) => {
+
+					DocRegisterHash.methods.getPost(i).call()
+						.then(result => {
+							//console.log(result);
+							if (result['_isVisible'] == true) {
+								resolve({ 'index': result['_index'], 'ipfsHash': result['_ipfsHash'], 'title': result['_title'], 'creationTime': result['creationTime'], 'lastUpdateTime': result['lastUpdateTime'] });
+							}
+						})
+				})
+				newHtml.then((result) => {
+
+					// md reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
+					var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
+
+					html += '<li><a target=_blank href="https://gateway.ipfs.io/ipfs/<your md-reader ipfs hash>#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
+					$("#arrayContent").html(html);
+				});
+
+			};
+
+		})
 }
 
 initializeEth();
