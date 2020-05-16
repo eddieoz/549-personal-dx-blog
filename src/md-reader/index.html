@@ -3,17 +3,20 @@
 
 <head>
   <title>eddieoz.crypto dx blog | 549-project</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="Decentralised Blog">
+  <meta name="author" content="eddieoz">
 
-  <script src="lib/jquery.min.js"></script>
-  <script src="lib/marked.min.js"></script>
-  <script src="lib/prettify.min.js"></script>
-  <script src="lib/strapdown.js"></script>
-  <script src="lib/params.js"></script>
-  <script src="lib/web3.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/marked.min.js"></script>
+  <script src="js/prettify.min.js"></script>
+  <script src="js/strapdown.js"></script>
+  <script src="js/params.js"></script>
+  <script src="js/web3.min.js"></script>
 
-  <link rel="stylesheet" href="lib/themes/bootstrap.min.css" />
-  <link rel="stylesheet" href="lib/strapdown.css" />
-  <link rel="stylesheet" href="lib/mdown-style.css" />
+  <link rel="stylesheet" href="css/themes/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/strapdown.css" />
+  <link rel="stylesheet" href="css/mdown-style.css" />
 
 
   <style type="text/css">
@@ -46,7 +49,7 @@
   <script>
     function render(path) {
       var xmp = document.getElementById("markdown");
-
+      var hash = path.split('/')[2];
       // set theme first.
       var theme = getParameterByName("theme")
       if (theme && theme && theme.length > 0) {
@@ -59,13 +62,14 @@
 
         // fix the navbar
         $('.navbar #headline').html('<a href="https://eddieoz.crypto">eddieoz.crypto dx blog | 549-project</a>')
-        $('title').text($('.navbar-inner #headline').text())
 
         $('.navbar-fixed-top')
           .addClass('navbar-static-top')
           .removeClass('navbar-fixed-top')
 
         $('#loading').hide()
+        console.log(hash);
+        updateMetadata(hash);
       })
     }
 
@@ -78,7 +82,7 @@
       //window.location.reload()
     }
   </script>
-  <script src="lib/dxblog.js"></script>
+  <script src="js/dxblog.js"></script>
 </body>
 
 </html>

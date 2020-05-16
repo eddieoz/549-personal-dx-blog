@@ -215,12 +215,11 @@ async function initializeEth() {
 
 async function listAllPosts() {
 
+
 	await DocRegisterHash.methods.totalPosts().call()
 		.then(total => {
 			var html = '';
-
 			for (var i = total; i >= 1; i--) {
-
 				var newHtml = new Promise((resolve, reject) => {
 					DocRegisterHash.methods.getPost(i).call()
 						.then(result => {
@@ -232,7 +231,7 @@ async function listAllPosts() {
 				})
 				newHtml.then((result) => {
 					var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
-					html += '<li><a href="https://gateway.ipfs.io/ipfs/<your md-reader ipfs hash>#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
+					html += '<li><a href="https://gateway.ipfs.io/ipfs/QmSvifpGNNx72RR9Yz5T39897UViUWWNSZy6bqFaRWMGrA#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
 					$("#arrayContent").html(html);
 				});
 
