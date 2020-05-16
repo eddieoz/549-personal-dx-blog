@@ -212,36 +212,52 @@ async function initializeEth() {
 
 }
 
-async function listAllPosts() {
+async function listAllPosts(){
+    
+    await DocRegisterHash.methods.totalPosts().call()
+    .then(total => {
+        var html = '';
+        for (var i=total; i>=1; i--){
+            var newHtml = new Promise ((resolve, reject) => {
+                DocRegisterHash.methods.getPost(i).call()
+                .then( result => {
+                    //console.log(result);
+                    if (result['_isVisible'] == true){
+                      resolve({'index':result['_index'], 'ipfsHash':result['_ipfsHash'], 'title':result['_title'], 'creationTime':result['creationTime'], 'lastUpdateTime':result['lastUpdateTime']});
+                    }
+                })
+            })
+            newHtml.then((result) => {
+                // md reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
+                var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
+                html += '<li><a target=_blank href="https://gateway.ipfs.io/ipfs/QmSvifpGNNx72RR9Yz5T39897UViUWWNSZy6bqFaRWMGrA#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
+                $("#arrayContent").html(html);
+            });
+            
+        };
 
-	await DocRegisterHash.methods.totalPosts().call()
-		.then(total => {
-			var html = '';
-			for (var i = total; i >= 1; i--) {
+    })
+}
 
-				var newHtml = new Promise((resolve, reject) => {
-
-					DocRegisterHash.methods.getPost(i).call()
-						.then(result => {
-							//console.log(result);
-							if (result['_isVisible'] == true) {
-								resolve({ 'index': result['_index'], 'ipfsHash': result['_ipfsHash'], 'title': result['_title'], 'creationTime': result['creationTime'], 'lastUpdateTime': result['lastUpdateTime'] });
-							}
-						})
-				})
-				newHtml.then((result) => {
-
-					// md reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
-					var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
-
-					html += '<li><a target=_blank href="https://gateway.ipfs.io/ipfs/<your md-reader ipfs hash>#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
-					$("#arrayContent").html(html);
-				});
-
-			};
-
+async function updateMetadata(ipfsHash){
+	console.log(ipfsHash);
+	$(document).ready(function(){
+		var metadata = new Promise ((resolve, reject) => {
+			DocRegisterHash.methods.getPostByHash(ipfsHash).call()
+			.then(result => {
+				resolve(result);				
+			})
+		});
+		metadata.then((result) => {
+			console.log(result[1]);
+				$('title').text(result[1].title);
+				$('meta[name=description]').attr('content', result[1].description);
+				$('meta[name=author]').attr('content', result[1].author);
 		})
+		
+	});
 }
 
 initializeEth();
 listAllPosts();
+updateMetadata();
