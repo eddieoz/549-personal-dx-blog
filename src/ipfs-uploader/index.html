@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <head>
         <meta charset="utf-8" />
-    <title>549 IPFS File Uploader</title>
+    <title>549 IPFS Post Uploader</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
 	<link href='css/bootstrap.min.css' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
@@ -14,7 +14,8 @@
 	</style>
 	<script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/web3.min.js"></script>
-    <script src="js/ipfs-http-client.js"></script>
+	<script src="js/ipfs-http-client.js"></script>
+	<script src="js/ipfs-api.js"></script>
 	<script src="js/buffer@5.2.1.js"></script>
 </head>
 <body>
@@ -53,7 +54,7 @@
                 	<img id="loader" src="img/spinner.gif">
             	</div>
         	</div>
-    	</div>
+		</div>
 
         <div class="panel panel-default">
         	<div class="panel-heading">Details</div>
@@ -62,6 +63,7 @@
 				<div id="tx"></div>
 				<div id="imgdiv"></div>
 				<div id="postId"></div>
+				<div id="rss"></div>
         	</div>
 		</div>  
 		

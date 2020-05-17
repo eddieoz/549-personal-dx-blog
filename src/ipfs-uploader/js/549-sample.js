@@ -260,109 +260,202 @@ async function initializeIpfs() {
 }
 
 // upload file
-async function initializeUpload(){
-    $("#file-upload").change(function() {
-        //source:https://stackoverflow.com/questions/29805909/jquery-how-to-check-if-uploaded-file-is-an-image-without-checking-extensions
-        var file = this.files[0];
-        var postIndex = $("#postIndex")[0].value;
-        if (postIndex == '') postIndex = 0;
+async function initializeUpload() {
+	$("#file-upload").change(function () {
+		//source:https://stackoverflow.com/questions/29805909/jquery-how-to-check-if-uploaded-file-is-an-image-without-checking-extensions
+		var file = this.files[0];
+		var postIndex = $("#postIndex")[0].value;
+		if (postIndex == '') postIndex = 0;
 
 		var postTitle = $("#postTitle")[0].value;
 		var postDescription = $("#postDescription")[0].value;
 
-        var postIsVisible = ($('#postIsVisible').is(":checked"))? true : false;
+		var postIsVisible = ($('#postIsVisible').is(":checked")) ? true : false;
 
-        var fileType = file["type"];
-        var ValidImageTypes = ["text/plain", "text/markdown"];
-        
-        if ($.inArray(fileType, ValidImageTypes) < 0) {
-            window.alert("you didn't choose a valid document");
-        } else {  
-        $("#loader").show();
-            var reader = new FileReader();
-            reader.onload = function() {
-                
-                mybuffer = buffer.Buffer(this.result);
-                
-                // ipfs add file
-                ipfs.add(mybuffer, function(err, result){
-                    if (err) {
-                        console.log("Error loading file to IPFS");
-                    } 
-                    else {
-                        ipfsHash = result[0].hash;
+		var fileType = file["type"];
+		var ValidImageTypes = ["text/plain", "text/markdown"];
 
-                        // if upload is sucessfull, register the hash
-                        DocRegisterHash.methods.registerHash(postIndex, ipfsHash, postTitle, postDescription, postIsVisible).send({ from: walletAddress, gas: 250000, gasPrice: 1e6 })                    
-                        .on('transactionHash', function(hash){
-                            console.log("TX: " + hash);
-                        })
-                        .on('confirmation', function(confirmationNumber, receipt){
-                            listAllPosts(DocRegisterHash);
-                            //console.log(confirmationNumber, receipt)
-                        })
-                        .on('receipt', function(receipt){
-                            console.log(receipt);
-                            
-                            // when sucessful, ipfs pin file
-                            ipfs.pin.add(ipfsHash, function (err) {
-                                if (err){
-                                    console.log("cannot pin");
-                                }
-                                else{
-                                    console.log("pin ok");
-                                }
-                            });
+		if ($.inArray(fileType, ValidImageTypes) < 0) {
+			window.alert("you didn't choose a valid document");
+		} else {
+			$("#loader").show();
+			var reader = new FileReader();
+			reader.onload = function () {
 
-                            // update datails on page
-                            $("#loader").hide();
-                            $("#ipfshash").html("IPFS Hash: " + ipfsHash + "<br>TX: " + receipt.transactionHash);
-                            $("#imgdiv").html("<img src=https://gateway.ipfs.io/ipfs/" + ipfsHash + " width='400'>");
-                            $("#postId").html("Post Index: " + receipt.events.logHash.returnValues.index);
-                            listAllPosts(DocRegisterHash);
-                        })
-                        .on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-                            console.log(error, receipt);
-                        })                  
-                    }
-                });
-            }
-            reader.readAsArrayBuffer(this.files[0]);  	
-        }
-    });
+				mybuffer = buffer.Buffer(this.result);
+
+				// ipfs add file
+				ipfs.add(mybuffer, function (err, result) {
+					if (err) {
+						console.log("Error loading file to IPFS");
+					}
+					else {
+						ipfsHash = result[0].hash;
+
+						// if upload is sucessfull, register the hash
+						console.log();
+						DocRegisterHash.methods.registerHash(postIndex, ipfsHash, postTitle, postDescription, postIsVisible).send({ from: walletAddress, gas: 400000, gasPrice: 1e6 })
+							.on('transactionHash', function (hash) {
+								console.log("TX: " + hash);
+							})
+							.on('confirmation', function (confirmationNumber, receipt) {
+								listAllPosts(DocRegisterHash);
+								//console.log(confirmationNumber, receipt)
+							})
+							.on('receipt', function (receipt) {
+								console.log(receipt);
+
+								// when sucessful, ipfs pin file
+								ipfs.pin.add(ipfsHash, function (err) {
+									if (err) {
+										console.log("cannot pin");
+									}
+									else {
+										console.log("pin ok");
+									}
+								});
+
+								// update datails on page
+								$("#loader").hide();
+								$("#ipfshash").html("IPFS Hash: " + ipfsHash + "<br>TX: " + receipt.transactionHash);
+								$("#imgdiv").html("<img src=https://gateway.ipfs.io/ipfs/" + ipfsHash + " width='400'>");
+								$("#postId").html("Post Index: " + receipt.events.logHash.returnValues.index);
+								listAllPosts(DocRegisterHash);
+								buildRss();
+							})
+							.on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+								console.log(error, receipt);
+							})
+					}
+				});
+			}
+			reader.readAsArrayBuffer(this.files[0]);
+		}
+	});
 }
 
-async function listAllPosts(DocRegisterHash){
-    
+async function listAllPosts(DocRegisterHash) {
 
-    // Retrieve the total number of posts
-    await DocRegisterHash.methods.totalPosts().call()
-    .then(total => {
-        
-        console.log("Total Posts: " + total);
-        var html = '';
-        // LIFO
-        for (var i=total; i>=1; i--){
-            var newHtml = new Promise ((resolve, reject) => {
-                DocRegisterHash.methods.getPost(i).call()
-                .then( result => {
-                    if (result['_isVisible'] == true){
-                        resolve({'index':result['_index'], 'ipfsHash':result['_ipfsHash'], 'title':result['_title'], 'description': result['description'], 'creationTime':result['creationTime'], 'lastUpdateTime':result['lastUpdateTime']});
-                    }
-                })
-            })
-            newHtml.then((result) => {
-                // markdown reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
-                var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
-                html += '<a target=_blank href="https://gateway.ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a>'
-                $("#arrayContent").html(html);
-            });
-            
-        };
 
-    })
+	// Retrieve the total number of posts
+	await DocRegisterHash.methods.totalPosts().call()
+		.then(total => {
+
+			console.log("Total Posts: " + total);
+			var html = '';
+			// LIFO
+			for (var i = total; i >= 1; i--) {
+				var newHtml = new Promise((resolve, reject) => {
+					DocRegisterHash.methods.getPost(i).call()
+						.then(result => {
+							if (result['_isVisible'] == true) {
+								resolve({ 'index': result['_index'], 'ipfsHash': result['_ipfsHash'], 'title': result['_title'], 'description': result['description'], 'creationTime': result['creationTime'], 'lastUpdateTime': result['lastUpdateTime'] });
+							}
+						})
+				})
+				newHtml.then((result) => {
+					// markdown reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
+					var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
+					html += '<a target=_blank href="https://gateway.ipfs.io/ipfs/QmZeD4AnU4REifNFRhSN5hTuyMeMBAgz8F8SsACBnnagwq#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a>'
+					$("#arrayContent").html(html);
+				});
+
+			};
+
+		})
+}
+
+async function buildRss() {
+	var rssFile = '/RSS-eddieoz.crypto/rss.xml';
+
+	// Retrieve the total number of posts
+	await DocRegisterHash.methods.totalPosts().call()
+		.then((total) => {
+			var rssItems = '';
+			var i = 0;
+			// LIFO
+			var rssBuild = new Promise((resolve, reject) => {
+				for (i = total; i >= 1; i--) {
+					var newHtml = new Promise((resolve, reject) => {
+						DocRegisterHash.methods.getPost(i).call()
+							.then(result => {
+								if (result['_isVisible'] == true) {
+									resolve({ 'index': result['_index'], 'ipfsHash': result['_ipfsHash'], 'title': result['_title'], 'description': result['_description'], 'creationTime': result['creationTime'], 'lastUpdateTime': result['lastUpdateTime'] });
+								}
+							})
+					})
+					newHtml.then((result) => {
+						var lastUpdateTime = new Date(result.lastUpdateTime * 1000);
+						rssItems += '<item>\n'
+						rssItems += '<title>' + result.title + '</title>\n'
+						rssItems += '<description>' + result.description + '</description>\n'
+						rssItems += '<link>' + 'https://gateway.ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe#/ipfs/' + result.ipfsHash + '</link>\n'
+						rssItems += '<guid isPermaLink="false">' + result.ipfsHash + '</guid>\n'
+						rssItems += '<pubDate>' + lastUpdateTime + '</pubDate>\n'
+						rssItems += '</item>\n'
+						if (result.index == 1) {							
+							resolve(rssItems);
+						}
+						
+					})
+				};
+			})
+			rssBuild.then((result) => {
+				var rssItems = result;
+				var lastBuildDate = Date(Date.now());
+
+				var rssHeader = '<?xml version="1.0" encoding="UTF-8" ?>\n';
+				rssHeader += '<rss version="2.0">\n';
+				rssHeader += '<channel>\n';
+				rssHeader += '<title>eddieoz.crypto</title>\n';
+				rssHeader += '<description>Decentralised and Unstoppable Blog</description>\n'
+				rssHeader += '<link>https://eddieoz.crypto</link>\n'
+				rssHeader += '<lastBuildDate>' + lastBuildDate + '</lastBuildDate>\n'
+				rssHeader += '<pubDate>Mon, 11 May 2020 15:23:00 +0300</pubDate>\n'
+				rssHeader += '<ttl>1800</ttl>\n'
+				
+				var rssFooter = '</channel>\n'
+				rssFooter += '</rss>\n'
+
+				var rss = rssHeader + rssItems + rssFooter;
+
+				
+				
+				// https://openbase.io/js/ipfs-api
+				ipfs.files.stat(rssFile, function(err,res){
+					console.log(res);
+					ipfs.pin.rm(res.hash, function (err) {
+						if (err) {
+							console.log("cannot pin");
+						}
+						else {
+							console.log("remove pin ok");
+						}
+					});
+				})
+				ipfs.files.write(rssFile, buffer.Buffer(rss), { 'create': true }, function (err, res) {
+					ipfs.files.stat(rssFile, function (err, res) {
+						ipfs.pin.add(res.hash, function (err) {
+							if (err) {
+								console.log("cannot pin");
+							}
+							else {
+								console.log("pin ok");
+							}
+						});
+						ipfs.name.publish('/ipfs/' + res.hash, function (err, res) {
+							//console.log(res);
+							console.log(`RSS link: https://gateway.ipfs.io/ipns/${res.name}`);
+							$("#rss").html(`https://gateway.ipfs.io/ipns/${res.name}`);
+						});
+					});
+				});
+			})
+
+		})
 }
 
 initializeIpfs();
 initializeUpload();
+buildRss(); // small blog, build rss when opening the manager
 listAllPosts(DocRegisterHash);

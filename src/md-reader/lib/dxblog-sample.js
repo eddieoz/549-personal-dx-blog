@@ -230,7 +230,7 @@ async function listAllPosts(){
             newHtml.then((result) => {
                 // md reader: https://ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe
                 var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
-                html += '<li><a target=_blank href="https://gateway.ipfs.io/ipfs/QmSvifpGNNx72RR9Yz5T39897UViUWWNSZy6bqFaRWMGrA#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
+                html += '<li><a href="https://gateway.ipfs.io/ipfs/QmZeD4AnU4REifNFRhSN5hTuyMeMBAgz8F8SsACBnnagwq#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
                 $("#arrayContent").html(html);
             });
             
@@ -249,7 +249,6 @@ async function updateMetadata(ipfsHash){
 			})
 		});
 		metadata.then((result) => {
-			console.log(result[1]);
 				$('title').text(result[1].title);
 				$('meta[name=description]').attr('content', result[1].description);
 				$('meta[name=author]').attr('content', result[1].author);

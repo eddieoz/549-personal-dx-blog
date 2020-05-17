@@ -215,7 +215,6 @@ async function initializeEth() {
 
 async function listAllPosts() {
 
-
 	await DocRegisterHash.methods.totalPosts().call()
 		.then(total => {
 			var html = '';
@@ -231,7 +230,7 @@ async function listAllPosts() {
 				})
 				newHtml.then((result) => {
 					var lastUpdateTime = new Date(result.lastUpdateTime * 1000).toLocaleDateString("en-GB");
-					html += '<li><a href="https://gateway.ipfs.io/ipfs/QmSvifpGNNx72RR9Yz5T39897UViUWWNSZy6bqFaRWMGrA#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
+					html += '<li><a href="https://gateway.ipfs.io/ipfs/QmZeD4AnU4REifNFRhSN5hTuyMeMBAgz8F8SsACBnnagwq#/ipfs/' + result.ipfsHash + '" class="list-group-item list-group-item-action">' + '[' + lastUpdateTime + '] ' + result.index + ': ' + result.title + '</a></li>'
 					$("#arrayContent").html(html);
 				});
 

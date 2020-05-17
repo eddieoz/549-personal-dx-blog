@@ -15,20 +15,19 @@ contract DocRegisterHash is Ownable, Initializable {
         uint lastUpdateTime;
     }
     
-    struct Metadata {
-        string value;
-    }
     string public blogName;
     uint public version;
     uint public totalPosts;
+    
     mapping (uint => Post) postHashes;
     mapping (uint => mapping(string => string)) public metadata;
     mapping (string => uint) hashToIndex;
 
     event logHash(uint index, string ipfsHash, string title, address author, bool _isVisible, uint creationTime, uint lastUpdateTime);
 
-    function initialize(string memory _blogName) initializer public {
+    function initialize(string memory _blogName, uint _version) public initializer {
         blogName = _blogName;
+        version = _version;
         totalPosts = 0;
     }
 
@@ -64,7 +63,7 @@ contract DocRegisterHash is Ownable, Initializable {
         return (_id, postHashes[_id]);
     }
     
-    function setMetadata(uint _id, string memory _key, string memory _value) public returns (uint){
+    function setMetadata(uint _id, string memory _key, string memory _value) public onlyOwner returns (uint){
         bytes memory testIpfsHash = bytes(postHashes[_id].ipfsHash);
         if (testIpfsHash.length == 0) revert( "post not found"); 
         metadata[_id][_key] = _value;
