@@ -263,6 +263,8 @@ async function initializeIpfs() {
 async function initializeUpload() {
 	$("#file-upload").change(function () {
 		//source:https://stackoverflow.com/questions/29805909/jquery-how-to-check-if-uploaded-file-is-an-image-without-checking-extensions
+		
+		// get dom data
 		var file = this.files[0];
 		var postIndex = $("#postIndex")[0].value;
 		if (postIndex == '') postIndex = 0;
@@ -381,6 +383,7 @@ async function buildRss() {
 			var rssBuild = new Promise((resolve, reject) => {
 				for (i = total; i >= 1; i--) {
 					var newHtml = new Promise((resolve, reject) => {
+						// Get post
 						DocRegisterHash.methods.getPost(i).call()
 							.then(result => {
 								if (result['_isVisible'] == true) {
@@ -388,6 +391,7 @@ async function buildRss() {
 								}
 							})
 					})
+					// Mount rss and sitemap items
 					newHtml.then((result) => {
 						var lastUpdateTime = new Date(result.lastUpdateTime * 1000);
 						rssItems += '<item>\n'
@@ -404,6 +408,8 @@ async function buildRss() {
 						sitemapLinks += '</loc>\n'
 						sitemapLinks += '<lastmod>' + lastUpdateTime + '</lastmod>\n'
 						sitemapLinks += '</url>\n'
+						
+						// if (index == 1), resolve and exit
 						if (result.index == 1) {
 							resolve([rssItems, sitemapLinks]);
 						}
@@ -411,12 +417,14 @@ async function buildRss() {
 					})
 				};
 			})
+			// Mount and publish rss and sitemap
 			rssBuild.then((result) => {
 				var rssItems = result[0];
 				var sitemapLinks = result[1];
 
 				var lastBuildDate = Date(Date.now());
 
+				// RSS header & footer
 				var rssHeader = '<?xml version="1.0" encoding="UTF-8" ?>\n';
 				rssHeader += '<rss version="2.0">\n';
 				rssHeader += '<channel>\n';
@@ -430,6 +438,7 @@ async function buildRss() {
 				var rssFooter = '</channel>\n'
 				rssFooter += '</rss>\n'
 
+				// Sitemap header & footer
 				var sitemapHeader = '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemap.org/schemas/sitemap/0.9 http://www.sitemap.org/schemas/sitemap/0.9/sitemap.xsd">\n'
 				var sitemapFooter = '</urlset>\n'
 
@@ -438,6 +447,8 @@ async function buildRss() {
 
 
 				// https://openbase.io/js/ipfs-api
+				
+				// remove the file
 				ipfs.files.stat(rssFile, function (err, res) {
 					console.log(res);
 					ipfs.pin.rm(res.hash, function (err) {
@@ -449,6 +460,7 @@ async function buildRss() {
 						}
 					});
 				})
+
 				ipfs.files.stat(sitemapFile, function (err, res) {
 					console.log(res);
 					ipfs.pin.rm(res.hash, function (err) {
@@ -460,6 +472,8 @@ async function buildRss() {
 						}
 					});
 				})
+				
+				// publish rss
 				ipfs.files.write(rssFile, buffer.Buffer(rss), { 'create': true }, function (err, res) {
 					ipfs.files.stat(rssFile, function (err, res) {
 						ipfs.pin.add(res.hash, function (err) {
@@ -473,7 +487,24 @@ async function buildRss() {
 					});
 				});
 
+				// publish sitemap
+				ipfs.files.write(sitemapFile, buffer.Buffer(sitemap), { 'create': true }, function (err, res) {
+					ipfs.files.stat(sitemapFile, function (err, res) {
+						ipfs.pin.add(res.hash, function (err) {
+							if (err) {
+								console.log("cannot pin");
+							}
+							else {
+								console.log("pin ok");
+							}
+						});
+					});
+				});
+
+				// publish folder to ipns
 				ipfs.files.stat(xmlFolder, function (err, res) {
+					
+					// pin folder on your node
 					ipfs.pin.add(res.hash, function (err) {
 						if (err) {
 							console.log("cannot pin");
@@ -484,6 +515,8 @@ async function buildRss() {
 					});
 					ipfs.name.publish('/ipfs/' + res.hash, function (err, res) {
 						//console.log(res);
+						
+						// update DOM
 						console.log(`RSS: https://gateway.ipfs.io/ipns/${res.name}/rss.xml`);
 						$("#rss").html(`RSS: https://gateway.ipfs.io/ipns/${res.name}/rss.xml`);
 						console.log(`Sitemap: https://gateway.ipfs.io/ipns/${res.name}/sitemap.xml`);
