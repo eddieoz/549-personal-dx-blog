@@ -366,12 +366,16 @@ async function listAllPosts(DocRegisterHash) {
 }
 
 async function buildRss() {
-	var rssFile = '/RSS-eddieoz.crypto/rss.xml';
+	var xmlFolder = '/RSS-eddieoz.crypto';
+	var rssFile = xmlFolder + '/rss.xml';
+	var sitemapFile = xmlFolder + '/sitemap.xml';
+
 
 	// Retrieve the total number of posts
 	await DocRegisterHash.methods.totalPosts().call()
 		.then((total) => {
 			var rssItems = '';
+			var sitemapLinks = '';
 			var i = 0;
 			// LIFO
 			var rssBuild = new Promise((resolve, reject) => {
@@ -393,15 +397,24 @@ async function buildRss() {
 						rssItems += '<guid isPermaLink="false">' + result.ipfsHash + '</guid>\n'
 						rssItems += '<pubDate>' + lastUpdateTime + '</pubDate>\n'
 						rssItems += '</item>\n'
-						if (result.index == 1) {							
-							resolve(rssItems);
+
+						sitemapLinks += '<url>\n'
+						sitemapLinks += '<loc>\n'
+						sitemapLinks += 'https://gateway.ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe#/ipfs/' + result.ipfsHash + "\n"
+						sitemapLinks += '</loc>\n'
+						sitemapLinks += '<lastmod>' + lastUpdateTime + '</lastmod>\n'
+						sitemapLinks += '</url>\n'
+						if (result.index == 1) {
+							resolve([rssItems, sitemapLinks]);
 						}
-						
+
 					})
 				};
 			})
 			rssBuild.then((result) => {
-				var rssItems = result;
+				var rssItems = result[0];
+				var sitemapLinks = result[1];
+
 				var lastBuildDate = Date(Date.now());
 
 				var rssHeader = '<?xml version="1.0" encoding="UTF-8" ?>\n';
@@ -413,16 +426,30 @@ async function buildRss() {
 				rssHeader += '<lastBuildDate>' + lastBuildDate + '</lastBuildDate>\n'
 				rssHeader += '<pubDate>Mon, 11 May 2020 15:23:00 +0300</pubDate>\n'
 				rssHeader += '<ttl>1800</ttl>\n'
-				
+
 				var rssFooter = '</channel>\n'
 				rssFooter += '</rss>\n'
 
-				var rss = rssHeader + rssItems + rssFooter;
+				var sitemapHeader = '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemap.org/schemas/sitemap/0.9 http://www.sitemap.org/schemas/sitemap/0.9/sitemap.xsd">\n'
+				var sitemapFooter = '</urlset>\n'
 
-				
-				
+				var rss = rssHeader + rssItems + rssFooter;
+				var sitemap = sitemapHeader + sitemapLinks + sitemapFooter;
+
+
 				// https://openbase.io/js/ipfs-api
-				ipfs.files.stat(rssFile, function(err,res){
+				ipfs.files.stat(rssFile, function (err, res) {
+					console.log(res);
+					ipfs.pin.rm(res.hash, function (err) {
+						if (err) {
+							console.log("cannot pin");
+						}
+						else {
+							console.log("remove pin ok");
+						}
+					});
+				})
+				ipfs.files.stat(sitemapFile, function (err, res) {
 					console.log(res);
 					ipfs.pin.rm(res.hash, function (err) {
 						if (err) {
@@ -443,13 +470,28 @@ async function buildRss() {
 								console.log("pin ok");
 							}
 						});
-						ipfs.name.publish('/ipfs/' + res.hash, function (err, res) {
-							//console.log(res);
-							console.log(`RSS link: https://gateway.ipfs.io/ipns/${res.name}`);
-							$("#rss").html(`https://gateway.ipfs.io/ipns/${res.name}`);
-						});
 					});
 				});
+
+				ipfs.files.stat(xmlFolder, function (err, res) {
+					ipfs.pin.add(res.hash, function (err) {
+						if (err) {
+							console.log("cannot pin");
+						}
+						else {
+							console.log("pin ok");
+						}
+					});
+					ipfs.name.publish('/ipfs/' + res.hash, function (err, res) {
+						//console.log(res);
+						console.log(`RSS: https://gateway.ipfs.io/ipns/${res.name}/rss.xml`);
+						$("#rss").html(`RSS: https://gateway.ipfs.io/ipns/${res.name}/rss.xml`);
+						console.log(`Sitemap: https://gateway.ipfs.io/ipns/${res.name}/sitemap.xml`);
+						$("#sitemap").html(`Sitemap: https://gateway.ipfs.io/ipns/${res.name}/sitemap.xml`);
+					});
+
+				});
+
 			})
 
 		})
