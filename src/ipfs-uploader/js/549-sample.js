@@ -397,14 +397,16 @@ async function buildRss() {
 						rssItems += '<item>\n'
 						rssItems += '<title>' + result.title + '</title>\n'
 						rssItems += '<description>' + result.description + '</description>\n'
-						rssItems += '<link>' + 'https://gateway.ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe#/ipfs/' + result.ipfsHash + '</link>\n'
+						// rssItems += '<link>' + 'https://gateway.ipfs.io/ipfs/QmZeD4AnU4REifNFRhSN5hTuyMeMBAgz8F8SsACBnnagwq#/ipfs/' + result.ipfsHash + '</link>\n'
+						rssItems += '<link>' + 'https://gateway.ipfs.io/ipfs/' + result.ipfsHash + '</link>\n'
 						rssItems += '<guid isPermaLink="false">' + result.ipfsHash + '</guid>\n'
 						rssItems += '<pubDate>' + lastUpdateTime + '</pubDate>\n'
 						rssItems += '</item>\n'
 
 						sitemapLinks += '<url>\n'
 						sitemapLinks += '<loc>\n'
-						sitemapLinks += 'https://gateway.ipfs.io/ipfs/QmVUFoAk2ZUxh12GXA2qLDHgTNzJgiZeZoaaM2s2pjgJxe#/ipfs/' + result.ipfsHash + "\n"
+						// sitemapLinks += 'https://gateway.ipfs.io/ipfs/QmZeD4AnU4REifNFRhSN5hTuyMeMBAgz8F8SsACBnnagwq#/ipfs/' + result.ipfsHash + "\n"
+						sitemapLinks += 'https://gateway.ipfs.io/ipfs/' + result.ipfsHash + "\n"
 						sitemapLinks += '</loc>\n'
 						sitemapLinks += '<lastmod>' + lastUpdateTime + '</lastmod>\n'
 						sitemapLinks += '</url>\n'
@@ -434,12 +436,25 @@ async function buildRss() {
 				rssHeader += '<lastBuildDate>' + lastBuildDate + '</lastBuildDate>\n'
 				rssHeader += '<pubDate>Mon, 11 May 2020 15:23:00 +0300</pubDate>\n'
 				rssHeader += '<ttl>1800</ttl>\n'
+				rssHeader += '<item>\n'
+				rssHeader += '<title>eddieoz.crypto dx blog | 549-project</title>\n'
+				rssHeader += '<description>Decentralised and unstoppable blog</description>\n'
+				rssHeader += '<link>https://gateway.ipfs.io/ipns/eddieoz.com</link>\n'
+				rssHeader += '<guid isPermaLink="true">eddieoz.crypto</guid>\n'
+				rssHeader += '<pubDate>' + lastBuildDate + '</pubDate>\n'
+				rssHeader += '</item>\n'
 
 				var rssFooter = '</channel>\n'
 				rssFooter += '</rss>\n'
 
 				// Sitemap header & footer
 				var sitemapHeader = '<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemap.org/schemas/sitemap/0.9 http://www.sitemap.org/schemas/sitemap/0.9/sitemap.xsd">\n'
+				sitemapHeader += '<url>\n'
+				sitemapHeader += '<loc>\n'
+				sitemapHeader += 'https://gateway.ipfs.io/ipns/eddieoz.com\n'
+				sitemapHeader += '</loc>\n'
+				sitemapHeader += '<lastmod>' + lastBuildDate + '</lastmod>\n'
+				sitemapHeader += '</url>\n'
 				var sitemapFooter = '</urlset>\n'
 
 				var rss = rssHeader + rssItems + rssFooter;
