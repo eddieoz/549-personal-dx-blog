@@ -1,4 +1,18 @@
 $(document).ready(function () {
+	$("#build-rss").click(function() {
+		$("#loader").show();
+		buildRss();
+	});
+
+	$("#postIndex").change(function() {
+		DocRegisterHash.methods.getPost($("#postIndex")[0].value).call()
+		.then(result => {
+			$("#postTitle")[0].value = result['_title'];
+			$("#postDescription")[0].value = result['_description'];
+			$('#postIsVisible').value = result['_isVisible'];
+		})
+		
+	});
 });
 
 var goerliContractAddress = '<insert goerli smart-contract address>'; // Goerli
@@ -472,6 +486,7 @@ async function buildRss() {
 						}
 						else {
 							console.log("remove pin ok");
+							ipfs.files.rm(rssFile);
 						}
 					});
 				})
@@ -484,6 +499,7 @@ async function buildRss() {
 						}
 						else {
 							console.log("remove pin ok");
+							ipfs.files.rm(sitemapFile);
 						}
 					});
 				})
@@ -536,6 +552,7 @@ async function buildRss() {
 						$("#rss").html(`RSS: https://gateway.ipfs.io/ipns/${res.name}/rss.xml`);
 						console.log(`Sitemap: https://gateway.ipfs.io/ipns/${res.name}/sitemap.xml`);
 						$("#sitemap").html(`Sitemap: https://gateway.ipfs.io/ipns/${res.name}/sitemap.xml`);
+						$("#loader").hide();
 					});
 
 				});
@@ -547,5 +564,5 @@ async function buildRss() {
 
 initializeIpfs();
 initializeUpload();
-buildRss(); // small blog, build rss when opening the manager
+//buildRss(); // small blog, build rss when opening the manager
 listAllPosts(DocRegisterHash);
