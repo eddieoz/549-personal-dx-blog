@@ -57,6 +57,17 @@
 		</div>
 
 		<div class="panel panel-default">
+        	<div class="panel-heading">Set Markdown Reader Template</div>
+        	<div class="panel-body"> 
+				<div class="form-group">
+					<input type="text" class="form-control" id="postTemplate" aria-describedby="postTemplateHelp" placeholder="Enter Template IPFS Hash">
+					<input id="submitTemplate" class="btn btn-primary" type="button" value="Set Template"> 
+					<small id="postTemplateHelp" class="form-text text-muted">Enter Template IPFS Hash</small>
+				</div>
+			</div>
+		</div>
+		
+		<div class="panel panel-default">
         	<div class="panel-heading">Build RSS and Sitemap</div>
         	<div class="panel-body"> 
 				<div class="form-group">
@@ -75,6 +86,7 @@
 				<div id="postId"></div>
 				<div id="rss"></div>
 				<div id="sitemap"></div>
+				<div id="ipfsTemplateHash"></div>
         	</div>
 		</div>  
 		
