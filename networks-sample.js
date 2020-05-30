@@ -11,6 +11,13 @@ module.exports = {
       gasPrice: 5e9,
       networkId: '*',
     },
+    mordor: { 
+      provider: () => new HDWalletProvider(
+        mnemonic, `https://www.ethercluster.com/mordor`
+      ),
+      networkId: 7,
+      gasPrice: 10e9
+    }
     goerli: {
       provider: () => new HDWalletProvider(
         mnemonic, `https://goerli.infura.io/v3/<insert yout Infura API key>`

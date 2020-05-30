@@ -20,8 +20,8 @@ $(document).ready(function () {
   });
 });
 
-var goerliContractAddress = '<insert goerli smart-contract address>'; // Goerli
-var goerliAccount = '<insert goerli account>'; // Goerli
+var liveContractAddress = '<insert goerli smart-contract address>'; // Goerli
+var liveAccount = '<insert goerli account>'; // Goerli
 
 var ganacheContractAddress = '<insert local ganache smart-contract address>'; // local
 var ganacheAccount = '<insert local ganache account[0] address>'; // local (default: 0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1)
@@ -668,8 +668,8 @@ var DocRegisterHash = '';
 //         // Request account access if needed
 //         console.log("ethereum injected on web browser");
 //         ethereum.enable();
-//         var contractAddress = goerliContractAddress;
-//         var walletAddress = goerliAccount; // goerli
+//         var contractAddress = liveContractAddress;
+//         var walletAddress = liveAccount; // goerli
 //     } catch (error) {
 //         // User denied account access...
 //     }
@@ -677,8 +677,8 @@ var DocRegisterHash = '';
 // else if (window.web3) {
 //     web3 = new Web3(web3.currentProvider);
 //     console.log("web3 injected on web browser");
-//     var contractAddress = goerliContractAddress;
-//     var walletAddress = goerliAccount; // goerli
+//     var contractAddress = liveContractAddress;
+//     var walletAddress = liveAccount; // goerli
 // } 
 // else {
 // set the provider you want from Web3.providers if local

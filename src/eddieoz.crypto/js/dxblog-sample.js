@@ -631,6 +631,7 @@ var DocRegisterHash;
 async function initializeEth() {
 
   // web3 = new Web3(new Web3.providers.HttpProvider("https://goerli.infura.io/v3/<insert your Infura api key")); // using infura
+  // web3 = new Web3(new Web3.providers.HttpProvider("https://www.ethercluster.com/mordor")); // using ethereum classic mordor
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545")); // using local ganache
   web3.eth.defaultAccount = web3.eth.accounts[0];
   DocRegisterHash = new web3.eth.Contract(ABI, contractAddress);
