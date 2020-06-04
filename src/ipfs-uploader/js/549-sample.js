@@ -729,50 +729,58 @@ async function initializeUpload() {
 
         mybuffer = buffer.Buffer(this.result);
 
-        // ipfs add file
-        ipfs.add(mybuffer, function (err, result) {
+        // ipfs add post file to a folder
+        // ipfs.add(mybuffer, function (err, result) {
+        var fileName = '/blog-posts/' + postTitle + '.txt';
+        ipfs.files.write(fileName, mybuffer, { 'create': true, 'parents': true, 'flush': true }, function (err, res) {
+
           if (err) {
-            console.log("Error loading file to IPFS");
+            console.log("Error loading file to IPFS\n" + err);
           }
           else {
-            ipfsHash = result[0].hash;
+            ipfs.files.stat(fileName, function (err, res) {
+              // ipfsHash = result[0].hash;
+              console.log(res);
+              ipfsHash = res.hash;
 
-            // if upload is sucessfull, register the hash
-            console.log();
-            DocRegisterHash.methods.registerHash(postIndex, ipfsHash, postTitle, postDescription, postIsVisible).send({ from: walletAddress, gas: 400000, gasPrice: 1e6 })
-              .on('transactionHash', function (hash) {
-                console.log("TX: " + hash);
-              })
-              .on('confirmation', function (confirmationNumber, receipt) {
-                listAllPosts(DocRegisterHash);
-                //console.log(confirmationNumber, receipt)
-              })
-              .on('receipt', function (receipt) {
-                console.log(receipt);
+              // if upload is sucessfull, register the hash
+              console.log();
+              DocRegisterHash.methods.registerHash(postIndex, ipfsHash, postTitle, postDescription, postIsVisible).send({ from: walletAddress, gas: 400000, gasPrice: 1e6 })
+                .on('transactionHash', function (hash) {
+                  console.log("TX: " + hash);
+                })
+                .on('confirmation', function (confirmationNumber, receipt) {
+                  listAllPosts(DocRegisterHash);
+                  //console.log(confirmationNumber, receipt)
+                })
+                .on('receipt', function (receipt) {
+                  console.log(receipt);
 
-                // when sucessful, ipfs pin file
-                ipfs.pin.add(ipfsHash, function (err) {
-                  if (err) {
-                    console.log("cannot pin");
-                  }
-                  else {
-                    console.log("pin ok");
-                  }
-                });
+                  // when sucessful, ipfs pin file
+                  ipfs.pin.add(ipfsHash, function (err) {
+                    if (err) {
+                      console.log("cannot pin");
+                    }
+                    else {
+                      console.log("pin ok");
+                    }
+                  });
 
-                // update datails on page
-                $("#loader").hide();
-                $("#ipfshash").html("IPFS Hash: " + ipfsHash + "<br>TX: " + receipt.transactionHash);
-                $("#imgdiv").html("<img src=https://gateway.ipfs.io/ipfs/" + ipfsHash + " width='400'>");
-                $("#postId").html("Post Index: " + receipt.events.logHash.returnValues.index);
-                listAllPosts(DocRegisterHash);
-                // buildRss();
-              })
-              .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-                console.log(error, receipt);
-              })
+                  // update datails on page
+                  $("#loader").hide();
+                  $("#ipfshash").html("IPFS Hash: " + ipfsHash + "<br>TX: " + receipt.transactionHash);
+                  $("#imgdiv").html("<img src=https://gateway.ipfs.io/ipfs/" + ipfsHash + " width='400'>");
+                  $("#postId").html("Post Index: " + receipt.events.logHash.returnValues.index);
+                  listAllPosts(DocRegisterHash);
+                  // buildRss();
+                })
+                .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+                  console.log(error, receipt);
+                })
+            });
           }
         });
+
       }
       reader.readAsArrayBuffer(this.files[0]);
     }
@@ -965,7 +973,7 @@ async function buildRss() {
             })
 
             // publish rss
-            ipfs.files.write(rssFile, buffer.Buffer(rss), { 'create': true }, function (err, res) {
+            ipfs.files.write(rssFile, buffer.Buffer(rss), { 'create': true, 'parents': true, 'flush': true }, function (err, res) {
               ipfs.files.stat(rssFile, function (err, res) {
                 ipfs.pin.add(res.hash, function (err) {
                   if (err) {
@@ -979,7 +987,7 @@ async function buildRss() {
             });
 
             // publish sitemap
-            ipfs.files.write(sitemapFile, buffer.Buffer(sitemap), { 'create': true }, function (err, res) {
+            ipfs.files.write(sitemapFile, buffer.Buffer(sitemap), { 'create': true, 'parents': true, 'flush': true }, function (err, res) {
               ipfs.files.stat(sitemapFile, function (err, res) {
                 ipfs.pin.add(res.hash, function (err) {
                   if (err) {
